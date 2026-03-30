@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: coworking
-        image: <DOCKER_IMAGE_URI_FROM_ECR>
+        image: 808512155786.dkr.ecr.us-east-1.amazonaws.com/coworking-analytics:latest
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
