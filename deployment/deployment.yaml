@@ -1,4 +1,4 @@
-        apiVersion: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: coworking
@@ -15,33 +15,28 @@ spec:
         service: coworking
     spec:
       containers:
-      - name: coworking
-        image: 808512155786.dkr.ecr.us-east-1.amazonaws.com/coworking-analytics:latest
-        imagePullPolicy: IfNotPresent
-        livenessProbe:
+        - name: coworking
+          image: 808512155786.dkr.ecr.us-east-1.amazonaws.com/coworking-analytics:latest
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /health_check
+              port: 5153
+            initialDelaySeconds: 5
+            timeoutSeconds: 2
+          readinessProbe:
           httpGet:
-            path: /health_check
-            port: 5153
-          initialDelaySeconds: 5
-          timeoutSeconds: 2
-        readinessProbe:
-          httpGet:
-            path: "/readiness_check"
-            port: 5153
-          initialDelaySeconds: 5
-          timeoutSeconds: 5
-        envFrom:
-        - configMapRef:
-            name: coworking-config
-        env:
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: coworking-secret
-              key: env:
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: coworking-secret
-              key: DB_PASSWORD
+              path: /readiness_check
+              port: 5153
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+          envFrom:
+            - configMapRef:
+                name: coworking-config
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: coworking-secret
+                  key: DB_PASSWORD
       restartPolicy: Always
